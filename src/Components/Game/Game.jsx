@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./Game.scss";
 import { mapFromServer } from "../../Map/map";
 import { useLocaleStorage } from "../../useLocaleStorage";
@@ -8,28 +8,15 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import img from "../../Map/map.png";
 
 const Game = () => {
-  const [map, setMap] = useLocaleStorage('map', {});
-  const [position, setPosition] = useLocaleStorage('position', '');
+  const [map, setMap] = useLocaleStorage('map', JSON.parse(JSON.stringify(mapFromServer)));
+  const [position, setPosition] = useLocaleStorage('position', mapFromServer.start);
   const [history, setHistory] = useLocaleStorage('history', []);
-  const [hp, setHp] = useLocaleStorage('hp', 0);
+  const [hp, setHp] = useLocaleStorage('hp', mapFromServer.hp.max);
   const [coins, setCoins] = useLocaleStorage('coins', 0);
-  const [maxCoins, setMaxCoins] = useLocaleStorage('maxCoins', 0);
+  const [maxCoins, setMaxCoins] = useLocaleStorage('maxCoins', mapFromServer.items.coins.length);
   const [finished, setFinished] = useLocaleStorage('finished', null);
   const [btnDisabled, setBtnDisabled] = useLocaleStorage('btnDisabled', {});
   const [hasKey, setHasKey] = useLocaleStorage('hasKey', false);
-  const [open, setOpen] = useState(false);
-
-  const resetOptions = () => {
-    setMap(mapFromServer);
-    setPosition(mapFromServer.start);
-    setHistory([]);
-    setHp(mapFromServer.hp.max);
-    setCoins(0);
-    setMaxCoins(mapFromServer.items.coins.length);
-    setFinished(null);
-    setHasKey(false);
-    checkBtnDisabled();
-  };
 
   const checkBtnDisabled = () => {
     setBtnDisabled({
@@ -42,8 +29,6 @@ const Game = () => {
       down: !map.ways[position].includes(`${+position[0] + 1} ${position[2]}`),
     });
   };
-
-  useEffect(resetOptions, []);
 
   useEffect(checkBtnDisabled, []);
 
@@ -71,6 +56,18 @@ const Game = () => {
         },
       ],
     });
+  };
+
+  const resetOptions = () => {
+    setMap(JSON.parse(JSON.stringify(mapFromServer)));
+    setPosition(mapFromServer.start);
+    setHistory([]);
+    setHp(mapFromServer.hp.max);
+    setCoins(0);
+    setMaxCoins(mapFromServer.items.coins.length);
+    setFinished(null);
+    setHasKey(false);
+    checkBtnDisabled();
   };
 
   const doStep = async (step) => {
@@ -223,15 +220,6 @@ const Game = () => {
         </div>
 
         <div className="game__buttons">
-          <div className="open">
-            <p className="open__btn" onClick={() => setOpen(!open)}>
-              {`${open ? 'Close' : 'Open'} map (ONLY IN DEMO)`}
-            </p>
-            {open && (
-              <img className="open__img" src={img} alt="full map" />
-            )}
-          </div>
-
           <div className="buttons">
             <button
               className="buttons__up"
