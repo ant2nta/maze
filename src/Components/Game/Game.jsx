@@ -8,8 +8,8 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import img from "../../Map/map.png";
 
 const Game = () => {
-  const [map, setMap] = useLocaleStorage('map', JSON.parse(JSON.stringify(mapFromServer)));
-  const [position, setPosition] = useLocaleStorage('position', mapFromServer.start);
+  const [map, setMap] = useLocaleStorage('map', {});
+  const [position, setPosition] = useLocaleStorage('position', '');
   const [history, setHistory] = useLocaleStorage('history', []);
   const [hp, setHp] = useLocaleStorage('hp', 0);
   const [coins, setCoins] = useLocaleStorage('coins', 0);
@@ -18,6 +18,18 @@ const Game = () => {
   const [btnDisabled, setBtnDisabled] = useLocaleStorage('btnDisabled', {});
   const [hasKey, setHasKey] = useLocaleStorage('hasKey', false);
   const [open, setOpen] = useState(false);
+
+  const resetOptions = () => {
+    setMap(mapFromServer);
+    setPosition(mapFromServer.start);
+    setHistory([]);
+    setHp(mapFromServer.hp.max);
+    setCoins(0);
+    setMaxCoins(mapFromServer.items.coins.length);
+    setFinished(null);
+    setHasKey(false);
+    checkBtnDisabled();
+  };
 
   const checkBtnDisabled = () => {
     setBtnDisabled({
@@ -30,6 +42,8 @@ const Game = () => {
       down: !map.ways[position].includes(`${+position[0] + 1} ${position[2]}`),
     });
   };
+
+  useEffect(resetOptions, []);
 
   useEffect(checkBtnDisabled, []);
 
@@ -57,18 +71,6 @@ const Game = () => {
         },
       ],
     });
-  };
-
-  const resetOptions = () => {
-    setMap(mapFromServer);
-    setPosition(mapFromServer.start);
-    setHistory([]);
-    setHp(mapFromServer.hp.max);
-    setCoins(0);
-    setMaxCoins(mapFromServer.items.coins.length);
-    setFinished(null);
-    setHasKey(false);
-    checkBtnDisabled();
   };
 
   const doStep = async (step) => {
