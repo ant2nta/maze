@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/maze/static/css/main.e45d570e.css",
+    "main.js": "/maze/static/js/main.dcc34f61.js",
+    "static/media/map.png": "/maze/static/media/map.4f8040b9294411d647c4.png",
+    "index.html": "/maze/index.html",
+    "main.e45d570e.css.map": "/maze/static/css/main.e45d570e.css.map",
+    "main.dcc34f61.js.map": "/maze/static/js/main.dcc34f61.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e45d570e.css",
+    "static/js/main.dcc34f61.js"
+  ]
+}
